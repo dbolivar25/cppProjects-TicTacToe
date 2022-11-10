@@ -78,11 +78,11 @@ class TicTacToeBoard {
             std::cout << "  "; printColor(cell[0]); std::cout << "  "; std::cout << "|";
             std::cout << "  "; printColor(cell[1]); std::cout << "  "; std::cout << "|";
             std::cout << "  "; printColor(cell[2]); std::cout << "  \n";
-            std::cout << "------------------" << "\n";
+            std::cout << "-----------------" << "\n";
             std::cout << "  "; printColor(cell[3]); std::cout << "  "; std::cout << "|";
             std::cout << "  "; printColor(cell[4]); std::cout << "  "; std::cout << "|";
             std::cout << "  "; printColor(cell[5]); std::cout << "  \n";
-            std::cout << "------------------" << "\n";
+            std::cout << "-----------------" << "\n";
             std::cout << "  "; printColor(cell[6]); std::cout << "  "; std::cout << "|";
             std::cout << "  "; printColor(cell[7]); std::cout << "  "; std::cout << "|";
             std::cout << "  "; printColor(cell[8]); std::cout << "  \n";
@@ -221,6 +221,15 @@ bool userDecision() {
 
     return (userInput == "_");
 }
+
+class ScoreBoard {
+    private:
+        int playerOneWins = 0;
+        int playerTwoWins = 0;
+
+    public:
+
+};
 
 bool flipCoin() {
     std::random_device rd; // obtain a random number from hardware
