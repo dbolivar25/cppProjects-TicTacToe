@@ -162,7 +162,6 @@ class TicTacToeBoard {
             }
 
             // if center is open computer takes it
-
             if (!(cell[4] == 'X' || cell[4] == 'O') && TicTacToeBoard::flipCoin()) {
                 cell[4] = 'O';
                 std::cout << "Computer moves to center:\n";
