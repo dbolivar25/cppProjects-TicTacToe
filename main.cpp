@@ -189,6 +189,17 @@ class TicTacToeBoard {
                         }
                     }
                 }
+            }
+
+            for (auto &lane: lanes) {
+                int numXInLane = 0;
+                int numOInLane = 0;
+
+                for (char *j: lane) {
+                    if (*j == 'X') ++numXInLane;
+                    if (*j == 'O') ++numOInLane;
+                }
+
                 if (numXInLane == 1 && numOInLane == 0) {
                     for (char *j: lane) {
                         if (!(*j == 'X' || *j == 'O')) {
@@ -333,7 +344,7 @@ int main() {
         scoreBoard.displayScoreBoard();
     } while (userDecision());
 
-    // todo: add thanks for playing message, scoreboards after games end, and final summary after quitting.
+    std::cout << "\n" << "Thanks for playing!" << "\n";
 
     return 0;
 }
