@@ -234,9 +234,10 @@ int main() {
     do {
         TicTacToeBoard ticTacToeBoard;
 
-        ticTacToeBoard.displayBoard();
-
         if (flipCoin()) {
+            std::cout << "You start:" << "\n";
+            ticTacToeBoard.displayBoard();
+
             while (true) {
                 ticTacToeBoard.setPlayerMove();
                 ticTacToeBoard.displayBoard();
@@ -247,6 +248,9 @@ int main() {
                 if (ticTacToeBoard.checkEndOfGame()) break;
             }
         } else {
+            std::cout << "Computer starts:" << "\n";
+            ticTacToeBoard.displayBoard();
+
             while (true) {
                 ticTacToeBoard.setComputerMove();
                 ticTacToeBoard.displayBoard();
