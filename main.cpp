@@ -70,6 +70,8 @@ class TicTacToeBoard {
             else std::cout << character;
         }
 
+
+
     public:
         void displayBoard() {
             std::cout << "\n";
@@ -100,6 +102,7 @@ class TicTacToeBoard {
         }
 
         void setComputerMove() {
+
             int randomMove;
             int playerMove;
 
@@ -107,8 +110,74 @@ class TicTacToeBoard {
             std::mt19937 gen(rd()); // seed the generator
             std::uniform_int_distribution<> distribution(1, 9); // define the range
 
-            // todo: make so that computer scans through all possible lanes and makes decision based on if it is about
-            //       to win or lose
+            for (auto & lane : lanes) {
+                int numXInLane = 0;
+                int numOInLane = 0;
+
+                for (char *j : lane) {
+                    if (*j == 'X') ++numXInLane;
+                    if (*j == 'O') ++numOInLane;
+                }
+
+                if (numOInLane == 2) {
+                    for (char *j : lane) {
+                        if (!(*j == 'X' || *j == 'O')) {
+                            *j = 'O';
+                            std::cout << "Computer moves to win:\n";
+                            ++turnNumber;
+                            return;
+                        }
+                    }
+                }
+                if (numXInLane == 2) {
+                    for (char *j : lane) {
+                        if (!(*j == 'X' || *j == 'O')) {
+                            *j = 'O';
+                            std::cout << "Computer moves to block:\n";
+                            ++turnNumber;
+                            return;
+                        }
+                    }
+                }
+                if (!(cell[4] == 'X' || cell[4] == 'O')) {
+                    cell[4] = 'O';
+                    std::cout << "Computer moves to center:\n";
+                    ++turnNumber;
+                    return;
+                }
+            }
+
+            for (auto & lane : lanes) {
+                int numXInLane = 0;
+                int numOInLane = 0;
+
+                for (char *j : lane) {
+                    if (*j == 'X') ++numXInLane;
+                    if (*j == 'O') ++numOInLane;
+                }
+
+                if (numOInLane == 1) {
+                    for (char *j : lane) {
+                        if (!(*j == 'X' || *j == 'O')) {
+                            *j = 'O';
+                            std::cout << "Computer moves to attack:\n";
+                            ++turnNumber;
+                            return;
+                        }
+                    }
+                }
+                if (numXInLane == 1) {
+                    for (char *j : lane) {
+                        if (!(*j == 'X' || *j == 'O')) {
+                            *j = 'O';
+                            std::cout << "Computer moves to defend:\n";
+                            ++turnNumber;
+                            return;
+                        }
+                    }
+                }
+            }
+
 
             do {
                 randomMove = distribution(gen);
@@ -116,12 +185,11 @@ class TicTacToeBoard {
 
             playerMove = randomMove;
 
-            std::cout << "Computer move: " << playerMove << "\n";
+            std::cout << "Computer moves randomly:\n";
 
             cell[playerMove - 1] = 'O';
-
             ++turnNumber;
-        }
+       }
 
         [[nodiscard]] bool checkEndOfGame() {
             checkWin();
@@ -154,6 +222,13 @@ bool userDecision() {
     return (userInput == "_");
 }
 
+bool flipCoin() {
+    std::random_device rd; // obtain a random number from hardware
+    std::mt19937 gen(rd()); // seed the generator
+    std::uniform_int_distribution<> distribution(0, 1); // define the range
+    return (distribution(gen) == 0);
+}
+
 int main() {
 
     do {
@@ -161,14 +236,26 @@ int main() {
 
         ticTacToeBoard.displayBoard();
 
-        while (true) {
-            ticTacToeBoard.setPlayerMove();
-            ticTacToeBoard.displayBoard();
-            if (ticTacToeBoard.checkEndOfGame()) break;
+        if (flipCoin()) {
+            while (true) {
+                ticTacToeBoard.setPlayerMove();
+                ticTacToeBoard.displayBoard();
+                if (ticTacToeBoard.checkEndOfGame()) break;
 
-            ticTacToeBoard.setComputerMove();
-            ticTacToeBoard.displayBoard();
-            if (ticTacToeBoard.checkEndOfGame()) break;
+                ticTacToeBoard.setComputerMove();
+                ticTacToeBoard.displayBoard();
+                if (ticTacToeBoard.checkEndOfGame()) break;
+            }
+        } else {
+            while (true) {
+                ticTacToeBoard.setComputerMove();
+                ticTacToeBoard.displayBoard();
+                if (ticTacToeBoard.checkEndOfGame()) break;
+
+                ticTacToeBoard.setPlayerMove();
+                ticTacToeBoard.displayBoard();
+                if (ticTacToeBoard.checkEndOfGame()) break;
+            }
         }
 
         switch (ticTacToeBoard.getWinner()) {
