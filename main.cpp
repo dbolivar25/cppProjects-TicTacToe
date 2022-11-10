@@ -141,7 +141,7 @@ bool userDecision() {
     std::string quitKey = "q";
 
     do {
-        userInput = "c";
+        userInput = "_";
         std::cout << "\n";
         std::cout << prompt;
         getline(std::cin, inputLine);
@@ -149,9 +149,9 @@ bool userDecision() {
         if (inputLine.length() != 0) {
             userInput = inputLine.substr(0, inputLine.find(' '));
         }
-    } while (!(userInput == "c" || userInput == quitKey));
+    } while (!(userInput == "_" || userInput == quitKey));
 
-    return (userInput == "c");
+    return (userInput == "_");
 }
 
 int main() {
