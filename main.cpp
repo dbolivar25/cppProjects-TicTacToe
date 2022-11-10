@@ -9,14 +9,15 @@ class TicTacToeBoard {
     private:
         char cell[9] = {'1', '2', '3', '4', '5', '6', '7', '8','9'};
 
-        char * lanes[8][3] = {&cell[0], &cell[1], &cell[2],
-                          &cell[3], &cell[4], &cell[5],
-                          &cell[6], &cell[7], &cell[8],
-                          &cell[0], &cell[3], &cell[6],
-                          &cell[1], &cell[4], &cell[7],
-                          &cell[2], &cell[5], &cell[8],
-                          &cell[0], &cell[4], &cell[8],
-                          &cell[2], &cell[4], &cell[6],
+        char * lanes[8][3] = {
+                    &cell[0], &cell[4], &cell[8],
+                    &cell[2], &cell[4], &cell[6],
+                    &cell[0], &cell[1], &cell[2],
+                    &cell[3], &cell[4], &cell[5],
+                    &cell[6], &cell[7], &cell[8],
+                    &cell[0], &cell[3], &cell[6],
+                    &cell[1], &cell[4], &cell[7],
+                    &cell[2], &cell[5], &cell[8],
         };
 
         int turnNumber = 0;
@@ -70,7 +71,12 @@ class TicTacToeBoard {
             else std::cout << character;
         }
 
-
+        static bool flipCoin() {
+            std::random_device rd; // obtain a random number from hardware
+            std::mt19937 gen(rd()); // seed the generator
+            std::uniform_int_distribution<> distribution(0, 1); // define the range
+            return (distribution(gen) == 0);
+        }
 
     public:
         void displayBoard() {
@@ -110,6 +116,8 @@ class TicTacToeBoard {
             std::mt19937 gen(rd()); // seed the generator
             std::uniform_int_distribution<> distribution(1, 9); // define the range
 
+
+            // checks all possible winning condition for computer and moves to win if win in next play is possible
             for (auto & lane : lanes) {
                 int numXInLane = 0;
                 int numOInLane = 0;
@@ -129,6 +137,18 @@ class TicTacToeBoard {
                         }
                     }
                 }
+            }
+
+            // checks all winning conditions for human player and moves to block if losing in next move is possible
+            for (auto & lane : lanes) {
+                int numXInLane = 0;
+                int numOInLane = 0;
+
+                for (char *j : lane) {
+                    if (*j == 'X') ++numXInLane;
+                    if (*j == 'O') ++numOInLane;
+                }
+
                 if (numXInLane == 2) {
                     for (char *j : lane) {
                         if (!(*j == 'X' || *j == 'O')) {
@@ -139,25 +159,29 @@ class TicTacToeBoard {
                         }
                     }
                 }
-                if (!(cell[4] == 'X' || cell[4] == 'O')) {
-                    cell[4] = 'O';
-                    std::cout << "Computer moves to center:\n";
-                    ++turnNumber;
-                    return;
-                }
             }
 
-            for (auto & lane : lanes) {
+            // if center is open computer takes it
+
+            if (!(cell[4] == 'X' || cell[4] == 'O') && TicTacToeBoard::flipCoin()) {
+                cell[4] = 'O';
+                std::cout << "Computer moves to center:\n";
+                ++turnNumber;
+                return;
+            }
+
+            // chooses a corner move and if not possible a side move
+            for (auto &lane: lanes) {
                 int numXInLane = 0;
                 int numOInLane = 0;
 
-                for (char *j : lane) {
+                for (char *j: lane) {
                     if (*j == 'X') ++numXInLane;
                     if (*j == 'O') ++numOInLane;
                 }
 
-                if (numOInLane == 1) {
-                    for (char *j : lane) {
+                if (numOInLane == 1 && numXInLane == 0) {
+                    for (char *j: lane) {
                         if (!(*j == 'X' || *j == 'O')) {
                             *j = 'O';
                             std::cout << "Computer moves to attack:\n";
@@ -166,8 +190,8 @@ class TicTacToeBoard {
                         }
                     }
                 }
-                if (numXInLane == 1) {
-                    for (char *j : lane) {
+                if (numXInLane == 1 && numOInLane == 0) {
+                    for (char *j: lane) {
                         if (!(*j == 'X' || *j == 'O')) {
                             *j = 'O';
                             std::cout << "Computer moves to defend:\n";
@@ -189,7 +213,7 @@ class TicTacToeBoard {
 
             cell[playerMove - 1] = 'O';
             ++turnNumber;
-       }
+        }
 
         [[nodiscard]] bool checkEndOfGame() {
             checkWin();
@@ -226,9 +250,27 @@ class ScoreBoard {
     private:
         int playerOneWins = 0;
         int playerTwoWins = 0;
-
+        int numDraws = 0;
     public:
+        void incrementPlayerOneWins() {
+            ++playerOneWins;
+        }
 
+        void incrementPlayerTwoWins() {
+            ++playerTwoWins;
+        }
+
+        void incrementNumDraws() {
+            ++numDraws;
+        }
+
+        void displayScoreBoard() const {
+            std::cout << "\n\n";
+            std::cout << "-----------------" << "\n";
+            printf("|  " ANSI_GREEN "%02d" ANSI_RESET "  ---  " ANSI_RED "%02d" ANSI_RESET "  |\n", playerOneWins,
+                   playerTwoWins);
+            std::cout << "-----------------" << "\n";
+        }
 };
 
 bool flipCoin() {
@@ -239,11 +281,13 @@ bool flipCoin() {
 }
 
 int main() {
+    ScoreBoard scoreBoard;
 
     do {
         TicTacToeBoard ticTacToeBoard;
 
         if (flipCoin()) {
+            std::cout << "\n";
             std::cout << "You start:" << "\n";
             ticTacToeBoard.displayBoard();
 
@@ -257,6 +301,7 @@ int main() {
                 if (ticTacToeBoard.checkEndOfGame()) break;
             }
         } else {
+            std::cout << "\n";
             std::cout << "Computer starts:" << "\n";
             ticTacToeBoard.displayBoard();
 
@@ -273,15 +318,20 @@ int main() {
 
         switch (ticTacToeBoard.getWinner()) {
             case 1:
-                std::cout << "You Win!" << "\n";
+                std::cout << "You Win!";
+                scoreBoard.incrementPlayerOneWins();
                 break;
             case 2:
-                std::cout << "You Lose." << "\n";
+                std::cout << "You Lose.";
+                scoreBoard.incrementPlayerTwoWins();
                 break;
             default:
-                std::cout << "Draw." << "\n";
+                std::cout << "Draw.";
+                scoreBoard.incrementNumDraws();
                 break;
         }
+
+        scoreBoard.displayScoreBoard();
     } while (userDecision());
 
     // todo: add thanks for playing message, scoreboards after games end, and final summary after quitting.
