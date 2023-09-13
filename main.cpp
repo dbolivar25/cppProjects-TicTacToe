@@ -304,7 +304,6 @@ int main() {
             ticTacToeBoard.displayBoard();
 
             while (true) {
-
                 ticTacToeBoard.setPlayerMove();
                 ticTacToeBoard.displayBoard();
                 if (ticTacToeBoard.checkEndOfGame()) break;
@@ -349,9 +348,6 @@ int main() {
     } while (userDecision());
 
     std::cout << "\n" << "Thanks for playing!" << "\n";
-
-    system("sleep 5");
-    system("clear");
 
     return 0;
 }
