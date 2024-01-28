@@ -342,7 +342,7 @@ int main() {
                 << "\n";
       ticTacToeBoard.displayBoard();
 
-      while (true) {
+      while (!ticTacToeBoard.checkEndOfGame()) {
         ticTacToeBoard.setPlayerMove();
         ticTacToeBoard.displayBoard();
         if (ticTacToeBoard.checkEndOfGame())
@@ -350,8 +350,6 @@ int main() {
 
         ticTacToeBoard.setComputerMove();
         ticTacToeBoard.displayBoard();
-        if (ticTacToeBoard.checkEndOfGame())
-          break;
       }
     } else {
       std::cout << "\n";
@@ -359,7 +357,7 @@ int main() {
                 << "\n";
       ticTacToeBoard.displayBoard();
 
-      while (true) {
+      while (!ticTacToeBoard.checkEndOfGame()) {
 
         ticTacToeBoard.setComputerMove();
         ticTacToeBoard.displayBoard();
@@ -368,8 +366,6 @@ int main() {
 
         ticTacToeBoard.setPlayerMove();
         ticTacToeBoard.displayBoard();
-        if (ticTacToeBoard.checkEndOfGame())
-          break;
       }
     }
 
